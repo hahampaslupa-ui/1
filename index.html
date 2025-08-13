@@ -2,71 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Wala lang</title>
+<title>Dinner Invitation</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  html, body { margin:0; padding:0; height:100%; background:black; color:white; font-family:monospace; overflow:hidden; }
-  #text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); white-space:pre; text-align:center; font-size:20px; }
-  .cursor { display:inline-block; width:10px; background:white; margin-left:2px; animation:blink 0.7s infinite; }
-  @keyframes blink { 0%,50% { background:white; } 51%,100% { background:transparent; } }
-  #enter-btn { display:none; position:absolute; top:70%; left:50%; transform:translateX(-50%); padding:10px 20px; font-size:18px; background:white; color:black; border:none; cursor:pointer; font-family:monospace; }
-  #love-message { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; text-align:center; color:red; animation:fadeIn 1s forwards; }
-  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  html, body {
+    margin:0; padding:0; height:100%; background:black; color:white; font-family:monospace; overflow:hidden;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .center {
+    text-align:center;
+    max-width: 600px;
+    padding: 20px;
+  }
+  h1 { color: yellow; font-size: 24px; }
+  p { font-size: 18px; }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+  .enter-btn { background:white; color:black; }
+  .yes-btn { background:green; color:white; }
+  .no-btn { background:red; color:white; }
+  .fade {
+    opacity:0;
+    transition: opacity 0.4s ease;
+  }
 </style>
 </head>
 <body>
 
-<audio id="matias-audio" preload="auto" loop>
+<audio id="bg-music" preload="auto" loop>
   <source src="https://archive.org/download/until-i-found-you/Until%20I%20found%20You.mp3" type="audio/mpeg">
 </audio>
 
-<div id="text"></div>
-<button id="enter-btn">Enter</button>
-<div id="love-message">I love you so much bebe</div>
+<div id="stage1" class="center">
+  <h1>⚠️ WARNING: ENTRY</h1>
+  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click enter</p>
+  <button class="enter-btn" onclick="goToStage2()">Enter</button>
+</div>
+
+<div id="stage2" class="center" style="display:none;">
+  <p>
+    Good day, Ms. Maine Peñuela,<br><br>
+    I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
+    Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
+    Looking forward to your response.😉🤍
+  </p>
+  <div>
+    <button id="yesBtn" class="yes-btn" onclick="goToStage3()">YES</button>
+    <button id="noBtn" class="no-btn" onclick="swapButtons()">NO</button>
+  </div>
+</div>
+
+<div id="stage3" class="center" style="display:none;">
+  <p>
+    Thank you so much for accepting my invitation! ❤️<br>
+    See you soonest. I love you so much Bebe! Mwaaa 😘🤍🤍🤍
+  </p>
+</div>
 
 <script>
-  const audio = document.getElementById("matias-audio");
-  const enterBtn = document.getElementById("enter-btn");
-  const loveMessage = document.getElementById("love-message");
-  const textDiv = document.getElementById("text");
+  const audio = document.getElementById("bg-music");
+  const stage1 = document.getElementById("stage1");
+  const stage2 = document.getElementById("stage2");
+  const stage3 = document.getElementById("stage3");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
 
-  const messages = [
-    "WARNING: This site contains explicit content.",
-    "Viewer discretion is advised.",
-    "Loading..."
-  ];
-
-  let msgIndex = 0, charIndex = 0;
-  let cursor = document.createElement("span");
-  cursor.classList.add("cursor");
-  textDiv.appendChild(cursor);
-
-  function typeText() {
-    if (msgIndex < messages.length) {
-      if (charIndex < messages[msgIndex].length) {
-        cursor.insertAdjacentText("beforebegin", messages[msgIndex].charAt(charIndex));
-        charIndex++;
-        setTimeout(typeText, 50);
-      } else {
-        cursor.insertAdjacentHTML("beforebegin", "<br>");
-        msgIndex++;
-        charIndex = 0;
-        setTimeout(typeText, 800);
-      }
-    } else {
-      enterBtn.style.display = "block";
-    }
+  function goToStage2(){
+    stage1.style.display = "none";
+    stage2.style.display = "block";
   }
 
-  enterBtn.addEventListener("click", () => {
+  function swapButtons(){
+    yesBtn.classList.add("fade");
+    noBtn.classList.add("fade");
+    setTimeout(()=>{
+      let temp = yesBtn.textContent;
+      yesBtn.textContent = noBtn.textContent;
+      noBtn.textContent = temp;
+      yesBtn.onclick = yesBtn.textContent === "YES" ? goToStage3 : swapButtons;
+      noBtn.onclick = noBtn.textContent === "NO" ? swapButtons : goToStage3;
+      yesBtn.classList.remove("fade");
+      noBtn.classList.remove("fade");
+    }, 400);
+  }
+
+  function goToStage3(){
+    stage2.style.display = "none";
+    stage3.style.display = "block";
     audio.currentTime = 0;
     audio.play().catch(err => console.log("Audio play blocked:", err));
-    textDiv.style.display = "none";
-    enterBtn.style.display = "none";
-    loveMessage.style.display = "block";
-  });
-
-  typeText();
+  }
 </script>
+
 </body>
 </html>
