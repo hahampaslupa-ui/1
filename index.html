@@ -2,148 +2,170 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dinner Invitation</title>
+<title>Romantic Invitation</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  html, body {
-    margin:0; padding:0; height:100%;
-    font-family:monospace; overflow:hidden;
-    display: flex; justify-content: center; align-items: center;
-    background: url('https://images.unsplash.com/photo-1522032666305-d5c5d9dcf6cf?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
-    background-size: cover;
-  }
-  .overlay {
-    position: absolute; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.4);
-    z-index: -1;
-  }
-  .center {
-    text-align:center;
-    max-width: 700px;
-    padding: 20px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 12px;
-  }
-  h1 { color: yellow; font-size: 26px; margin-bottom: 20px; }
-  p { font-size: 18px; color: white; line-height: 1.5; }
-  button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-  }
-  .enter-btn { background:white; color:black; }
-  .yes-btn { background:green; color:white; }
-  .no-btn { background:red; color:white; }
-  .swap-anim {
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.4s ease, opacity 0.4s ease;
-  }
-  /* Floating petals */
-  .petal {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tulip_petal.svg/512px-Tulip_petal.svg.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    animation: fall linear infinite;
-    z-index: 1;
-  }
-  @keyframes fall {
-    0% { transform: translateY(-10%) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
-  }
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: url('https://i.ibb.co/mhQ2jcR/tulip-field.jpg') no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Georgia', serif;
+        color: white;
+        overflow: hidden;
+    }
+
+    #overlay {
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 1.2em;
+        max-width: 600px;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        background: pink;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background: hotpink;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* Petal animation */
+    .petal {
+        position: fixed;
+        top: -10px;
+        background: pink;
+        border-radius: 50%;
+        opacity: 0.8;
+        pointer-events: none;
+        animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
 </style>
 </head>
 <body>
 
-<div class="overlay"></div>
-
-<audio id="bg-music" preload="auto" loop>
-  <source src="https://archive.org/download/until-i-found-you/Until%20I%20found%20You.mp3" type="audio/mpeg">
+<!-- Music -->
+<audio id="bg-music" loop>
+    <source src="until-i-found-you.mp3" type="audio/mpeg">
 </audio>
 
-<div id="stage1" class="center">
-  <h1>⚠️ WARNING: ENTRY</h1>
-  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click enter</p>
-  <button class="enter-btn" onclick="goToStage2()">Enter</button>
-</div>
+<div id="overlay">
+    <!-- Step 1: Warning -->
+    <div id="step1">
+        <h1>⚠️ WARNING: ENTRY</h1>
+        <p>By proceeding, you accept that there is no return.</p>
+        <p>If you understand, click enter.</p>
+        <button id="enter-btn">Enter</button>
+    </div>
 
-<div id="stage2" class="center" style="display:none;">
-  <p>
-    Good day, Ms. Maine Peñuela,<br><br>
-    I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
-    Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
-    Looking forward to your response.
-  </p>
-  <div>
-    <button id="yesBtn" class="yes-btn" onclick="goToStage3()">YES</button>
-    <button id="noBtn" class="no-btn" onclick="swapButtons()">NO</button>
-  </div>
-</div>
+    <!-- Step 2: Invitation -->
+    <div id="step2" class="hidden">
+        <p>
+        Good day, Ms. Maine Peñuela,<br><br>
+        I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for).<br>
+        The date is still tentative, but I’ll share the details soon.<br><br>
+        Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
+        Looking forward to your response.
+        </p>
+        <button id="yes-btn">YES</button>
+        <button id="no-btn">NO</button>
+    </div>
 
-<div id="stage3" class="center" style="display:none;">
-  <p>
-    Thank you so much for accepting my invitation! ❤️<br>
-    See you soonest. I love you so much Bebe! Mwaaa 😘🤍🤍🤍
-  </p>
+    <!-- Step 3: Final message -->
+    <div id="step3" class="hidden">
+        <p>
+            Thank you so much for accepting my invitation!<br>
+            See you soonest. 💋 I love you so much Bebe! 🤍🤍🤍
+        </p>
+    </div>
 </div>
 
 <script>
-  const audio = document.getElementById("bg-music");
-  const stage1 = document.getElementById("stage1");
-  const stage2 = document.getElementById("stage2");
-  const stage3 = document.getElementById("stage3");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
+    const enterBtn = document.getElementById('enter-btn');
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    const music = document.getElementById('bg-music');
 
-  let petalsInterval;
+    // Petal effect
+    function createPetal() {
+        const petal = document.createElement('div');
+        petal.classList.add('petal');
+        petal.style.width = Math.random() * 8 + 5 + 'px';
+        petal.style.height = petal.style.width;
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.background = ['pink', 'lightpink', 'white'][Math.floor(Math.random()*3)];
+        petal.style.animationDuration = Math.random() * 5 + 5 + 's';
+        document.body.appendChild(petal);
+        setTimeout(() => petal.remove(), 10000);
+    }
 
-  function createPetal(){
-    const petal = document.createElement('div');
-    petal.classList.add('petal');
-    petal.style.left = Math.random() * 100 + 'vw';
-    petal.style.animationDuration = (5 + Math.random() * 5) + 's';
-    document.body.appendChild(petal);
-    setTimeout(()=>petal.remove(), 10000);
-  }
+    // Make petals fall
+    setInterval(createPetal, 300);
 
-  function startPetals(){
-    petalsInterval = setInterval(createPetal, 400);
-  }
+    // Step navigation
+    enterBtn.addEventListener('click', () => {
+        step1.classList.add('hidden');
+        step2.classList.remove('hidden');
+        music.play().catch(err => console.log("Music blocked until user interacts again:", err));
+    });
 
-  function goToStage2(){
-    stage1.style.display = "none";
-    stage2.style.display = "block";
-    startPetals();
-  }
+    noBtn.addEventListener('click', () => {
+        // Swap text of YES and NO
+        let yesText = yesBtn.textContent;
+        yesBtn.textContent = noBtn.textContent;
+        noBtn.textContent = yesText;
+    });
 
-  function swapButtons(){
-    yesBtn.classList.add("swap-anim");
-    noBtn.classList.add("swap-anim");
-    setTimeout(()=>{
-      let temp = yesBtn.textContent;
-      yesBtn.textContent = noBtn.textContent;
-      noBtn.textContent = temp;
-      yesBtn.onclick = yesBtn.textContent === "YES" ? goToStage3 : swapButtons;
-      noBtn.onclick = noBtn.textContent === "NO" ? swapButtons : goToStage3;
-      yesBtn.classList.remove("swap-anim");
-      noBtn.classList.remove("swap-anim");
-    }, 400);
-  }
-
-  function goToStage3(){
-    stage2.style.display = "none";
-    stage3.style.display = "block";
-    audio.currentTime = 0;
-    audio.play().catch(err => console.log("Audio play blocked:", err));
-  }
+    yesBtn.addEventListener('click', () => {
+        if (yesBtn.textContent === 'YES') {
+            step2.classList.add('hidden');
+            step3.classList.remove('hidden');
+        } else {
+            // If YES button says NO, swap back
+            let yesText = yesBtn.textContent;
+            yesBtn.textContent = noBtn.textContent;
+            noBtn.textContent = yesText;
+        }
+    });
 </script>
 
 </body>
