@@ -5,167 +5,126 @@
 <title>Romantic Invitation</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background: url('https://i.ibb.co/mhQ2jcR/tulip-field.jpg') no-repeat center center fixed;
-        background-size: cover;
-        font-family: 'Georgia', serif;
-        color: white;
-        overflow: hidden;
+  html, body {
+    margin:0; padding:0; height:100%;
+    background: url('https://i.ibb.co/0Yjkk5K/daisy-field.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Georgia', serif;
+    color: white;
+    overflow: hidden;
+    position: relative;
+  }
+  #overlay {
+    background: rgba(0,0,0,0.5);
+    position:absolute; top:0; left:0;
+    width:100%; height:100%;
+    display:flex; justify-content:center; align-items:center;
+    flex-direction:column; text-align:center; padding:20px;
+  }
+  h1 { font-size:2em; margin-bottom:10px; color: #fff0f5; }
+  p { font-size:1.2em; max-width:600px; line-height:1.5; }
+  button {
+    margin:20px 10px;
+    padding:10px 20px;
+    font-size:18px;
+    background: #ffccda;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:bold;
+    transition: background 0.3s, transform 0.3s;
+  }
+  button:hover {
+    background: #ff99bb;
+    transform: scale(1.05);
+  }
+  .hidden { display:none!important; }
+  .petal {
+    position:fixed; top:-10px;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Daisy_%28flower%29.svg/120px-Daisy_%28flower%29.svg.png') no-repeat center center;
+    background-size: contain;
+    opacity:0.9;
+    pointer-events:none;
+    width:20px; height:20px;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0;
     }
-
-    #overlay {
-        background: rgba(0, 0, 0, 0.5);
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 2em;
-        margin-bottom: 10px;
-    }
-
-    p {
-        font-size: 1.2em;
-        max-width: 600px;
-    }
-
-    button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        font-size: 18px;
-        background: pink;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background 0.3s;
-    }
-
-    button:hover {
-        background: hotpink;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    /* Petal animation */
-    .petal {
-        position: fixed;
-        top: -10px;
-        background: pink;
-        border-radius: 50%;
-        opacity: 0.8;
-        pointer-events: none;
-        animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-        to {
-            transform: translateY(110vh) rotate(360deg);
-            opacity: 0;
-        }
-    }
+  }
 </style>
 </head>
 <body>
 
-<!-- Music -->
-<audio id="bg-music" loop>
-    <source src="until-i-found-you.mp3" type="audio/mpeg">
-</audio>
-
 <div id="overlay">
-    <!-- Step 1: Warning -->
-    <div id="step1">
-        <h1>⚠️ WARNING: ENTRY</h1>
-        <p>By proceeding, you accept that there is no return.</p>
-        <p>If you understand, click enter.</p>
-        <button id="enter-btn">Enter</button>
-    </div>
+  <div id="step1">
+    <h1>⚠️ WARNING: ENTRY</h1>
+    <p>By proceeding, you accept that there is no return.<br>If you understand, click enter.</p>
+    <button id="enter-btn">Enter</button>
+  </div>
 
-    <!-- Step 2: Invitation -->
-    <div id="step2" class="hidden">
-        <p>
-        Good day, Ms. Maine Peñuela,<br><br>
-        I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for).<br>
-        The date is still tentative, but I’ll share the details soon.<br><br>
-        Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
-        Looking forward to your response.
-        </p>
-        <button id="yes-btn">YES</button>
-        <button id="no-btn">NO</button>
-    </div>
+  <div id="step2" class="hidden">
+    <p>
+      Good day, Ms. Maine Peñuela,<br><br>
+      I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for).<br>
+      The date is still tentative, but I’ll share the details soon.<br><br>
+      Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
+      Looking forward to your response.
+    </p>
+    <button id="yes-btn">YES</button>
+    <button id="no-btn">NO</button>
+  </div>
 
-    <!-- Step 3: Final message -->
-    <div id="step3" class="hidden">
-        <p>
-            Thank you so much for accepting my invitation!<br>
-            See you soonest. 💋 I love you so much Bebe! 🤍🤍🤍
-        </p>
-    </div>
+  <div id="step3" class="hidden">
+    <p>
+      Thank you so much for accepting my invitation!<br>
+      See you soonest. 💋 I love you so much Bebe! 🤍🤍🤍
+    </p>
+  </div>
 </div>
 
+<iframe id="music-frame" width="0" height="0" src="" frameborder="0"
+  allow="autoplay; encrypted-media"></iframe>
+
 <script>
-    const enterBtn = document.getElementById('enter-btn');
-    const yesBtn = document.getElementById('yes-btn');
-    const noBtn = document.getElementById('no-btn');
-    const step1 = document.getElementById('step1');
-    const step2 = document.getElementById('step2');
-    const step3 = document.getElementById('step3');
-    const music = document.getElementById('bg-music');
+  const enterBtn = document.getElementById('enter-btn');
+  const yesBtn = document.getElementById('yes-btn');
+  const noBtn = document.getElementById('no-btn');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const step3 = document.getElementById('step3');
+  const musicFrame = document.getElementById('music-frame');
 
-    // Petal effect
-    function createPetal() {
-        const petal = document.createElement('div');
-        petal.classList.add('petal');
-        petal.style.width = Math.random() * 8 + 5 + 'px';
-        petal.style.height = petal.style.width;
-        petal.style.left = Math.random() * 100 + 'vw';
-        petal.style.background = ['pink', 'lightpink', 'white'][Math.floor(Math.random()*3)];
-        petal.style.animationDuration = Math.random() * 5 + 5 + 's';
-        document.body.appendChild(petal);
-        setTimeout(() => petal.remove(), 10000);
+  function createPetal() {
+    const petal = document.createElement('div');
+    petal.classList.add('petal');
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (5 + Math.random() * 5) + 's';
+    document.body.appendChild(petal);
+    setTimeout(() => petal.remove(), 10000);
+  }
+  setInterval(createPetal, 300);
+
+  enterBtn.addEventListener('click', () => {
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+    musicFrame.src = "https://www.youtube.com/embed/Ml0qpfS7Xqw?autoplay=1";
+  });
+
+  noBtn.addEventListener('click', () => {
+    [yesBtn.textContent, noBtn.textContent] = [noBtn.textContent, yesBtn.textContent];
+  });
+
+  yesBtn.addEventListener('click', () => {
+    if (yesBtn.textContent === 'YES') {
+      step2.classList.add('hidden');
+      step3.classList.remove('hidden');
+    } else {
+      [yesBtn.textContent, noBtn.textContent] = [noBtn.textContent, yesBtn.textContent];
     }
-
-    // Make petals fall
-    setInterval(createPetal, 300);
-
-    // Step navigation
-    enterBtn.addEventListener('click', () => {
-        step1.classList.add('hidden');
-        step2.classList.remove('hidden');
-        music.play().catch(err => console.log("Music blocked until user interacts again:", err));
-    });
-
-    noBtn.addEventListener('click', () => {
-        // Swap text of YES and NO
-        let yesText = yesBtn.textContent;
-        yesBtn.textContent = noBtn.textContent;
-        noBtn.textContent = yesText;
-    });
-
-    yesBtn.addEventListener('click', () => {
-        if (yesBtn.textContent === 'YES') {
-            step2.classList.add('hidden');
-            step3.classList.remove('hidden');
-        } else {
-            // If YES button says NO, swap back
-            let yesText = yesBtn.textContent;
-            yesBtn.textContent = noBtn.textContent;
-            noBtn.textContent = yesText;
-        }
-    });
+  });
 </script>
 
 </body>
