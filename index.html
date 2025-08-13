@@ -6,16 +6,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   html, body {
-    margin:0; padding:0; height:100%; background:black; color:white; font-family:monospace; overflow:hidden;
+    margin:0; padding:0; height:100%;
+    font-family:monospace; overflow:hidden;
     display: flex; justify-content: center; align-items: center;
+    background: url('https://images.unsplash.com/photo-1522032666305-d5c5d9dcf6cf?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+    background-size: cover;
+  }
+  .overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
   }
   .center {
     text-align:center;
-    max-width: 600px;
+    max-width: 700px;
     padding: 20px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
   }
-  h1 { color: yellow; font-size: 24px; }
-  p { font-size: 18px; }
+  h1 { color: yellow; font-size: 26px; margin-bottom: 20px; }
+  p { font-size: 18px; color: white; line-height: 1.5; }
   button {
     padding: 10px 20px;
     font-size: 18px;
@@ -28,13 +38,32 @@
   .enter-btn { background:white; color:black; }
   .yes-btn { background:green; color:white; }
   .no-btn { background:red; color:white; }
-  .fade {
-    opacity:0;
-    transition: opacity 0.4s ease;
+  .swap-anim {
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  /* Floating petals */
+  .petal {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tulip_petal.svg/512px-Tulip_petal.svg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    animation: fall linear infinite;
+    z-index: 1;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-10%) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
   }
 </style>
 </head>
 <body>
+
+<div class="overlay"></div>
 
 <audio id="bg-music" preload="auto" loop>
   <source src="https://archive.org/download/until-i-found-you/Until%20I%20found%20You.mp3" type="audio/mpeg">
@@ -51,7 +80,7 @@
     Good day, Ms. Maine Peñuela,<br><br>
     I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
     Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
-    Looking forward to your response.😉🤍
+    Looking forward to your response.
   </p>
   <div>
     <button id="yesBtn" class="yes-btn" onclick="goToStage3()">YES</button>
@@ -74,22 +103,38 @@
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
 
+  let petalsInterval;
+
+  function createPetal(){
+    const petal = document.createElement('div');
+    petal.classList.add('petal');
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (5 + Math.random() * 5) + 's';
+    document.body.appendChild(petal);
+    setTimeout(()=>petal.remove(), 10000);
+  }
+
+  function startPetals(){
+    petalsInterval = setInterval(createPetal, 400);
+  }
+
   function goToStage2(){
     stage1.style.display = "none";
     stage2.style.display = "block";
+    startPetals();
   }
 
   function swapButtons(){
-    yesBtn.classList.add("fade");
-    noBtn.classList.add("fade");
+    yesBtn.classList.add("swap-anim");
+    noBtn.classList.add("swap-anim");
     setTimeout(()=>{
       let temp = yesBtn.textContent;
       yesBtn.textContent = noBtn.textContent;
       noBtn.textContent = temp;
       yesBtn.onclick = yesBtn.textContent === "YES" ? goToStage3 : swapButtons;
       noBtn.onclick = noBtn.textContent === "NO" ? swapButtons : goToStage3;
-      yesBtn.classList.remove("fade");
-      noBtn.classList.remove("fade");
+      yesBtn.classList.remove("swap-anim");
+      noBtn.classList.remove("swap-anim");
     }, 400);
   }
 
