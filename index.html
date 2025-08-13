@@ -6,23 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #ffe4ec; /* Pastel pink for cute, instant load */
-    color: #222;
-    font-family: monospace;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin:0; padding:0; height:100%;
+    background:#ffe6f0; /* soft pastel pink */
+    color:#333; font-family:monospace;
+    overflow:hidden;
+    display: flex; justify-content: center; align-items: center;
   }
   .center {
-    text-align: center;
+    text-align:center;
     max-width: 600px;
     padding: 20px;
   }
-  h1 { color: #d9534f; font-size: 26px; }
+  h1 { color: #ff4d88; font-size: 24px; }
   p { font-size: 18px; }
   button {
     padding: 10px 20px;
@@ -31,37 +26,46 @@
     border: none;
     cursor: pointer;
     border-radius: 6px;
-    transition: transform 0.3s, opacity 0.3s;
+    transition: all 0.3s ease;
+    position: relative;
   }
-  .enter-btn { background: white; color: black; }
-  .yes-btn { background: #5cb85c; color: white; }
-  .no-btn { background: #d9534f; color: white; }
-  .fade { opacity: 0; }
+  .enter-btn { background:white; color:black; }
+  .yes-btn { background:#4CAF50; color:white; }
+  .no-btn { background:#f44336; color:white; }
+  .fun-btn { background:#ff80aa; color:white; position:absolute; }
+  .fade { opacity:0; transition: opacity 0.4s ease; }
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop {
+    animation: popIn 0.3s ease forwards;
+  }
 </style>
 </head>
 <body>
 
-<!-- Audio: Daisies by Justin Bieber -->
 <audio id="bg-music" preload="auto" loop>
-  <source src="https://cdn3.mp3gaa.xyz/swahilisongs/wp-content/uploads/2025/07/Justin_Bieber_-_DAISIES.mp3" type="audio/mpeg">
-  <!-- Source found publicly online :contentReference[oaicite:0]{index=0} -->
+  <source src="https://files.catbox.moe/2n6o3m.mp3" type="audio/mpeg">
 </audio>
 
 <div id="stage1" class="center">
   <h1>⚠️ WARNING: ENTRY</h1>
-  <p>By proceeding, you accept that there is no return.<br>If you understand, click Enter</p>
-  <button class="enter-btn" onclick="enterClicked()">Enter</button>
+  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click enter</p>
+  <button class="enter-btn" onclick="goToStage2()">Enter</button>
 </div>
 
 <div id="stage2" class="center" style="display:none;">
   <p>
     Good day, Ms. Maine Peñuela,<br><br>
-    I’d like to formally invite you to a dinner date—location undisclosed (a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
+    I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
     Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
-    Looking forward to your response. 😉🤍
+    Looking forward to your response.
   </p>
-  <button id="yesBtn" class="yes-btn">YES</button>
-  <button id="noBtn" class="no-btn">NO</button>
+  <div>
+    <button id="yesBtn" class="yes-btn" onclick="goToStage3()">YES</button>
+    <button id="noBtn" class="no-btn" onclick="firstNoClick()">NO</button>
+  </div>
 </div>
 
 <div id="stage3" class="center" style="display:none;">
@@ -72,43 +76,76 @@
 </div>
 
 <script>
-  const music = document.getElementById('bg-music');
-  const stage1 = document.getElementById('stage1');
-  const stage2 = document.getElementById('stage2');
-  const stage3 = document.getElementById('stage3');
-  const yesBtn = document.getElementById('yesBtn');
-  const noBtn = document.getElementById('noBtn');
+  const audio = document.getElementById("bg-music");
+  const stage1 = document.getElementById("stage1");
+  const stage2 = document.getElementById("stage2");
+  const stage3 = document.getElementById("stage3");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
 
-  function enterClicked() {
-    stage1.style.display = 'none';
-    stage2.style.display = 'block';
-    music.currentTime = 0;
-    music.play().catch(err => console.log('Audio play blocked:', err));
+  let sequenceIndex = 0;
+  const funnyTexts = [
+    "Ayaw mo?", "Sure kana ba?", "Ano ba yan?", "Balakajan",
+    "Di kita bati", "Sige na kase!"
+  ];
+
+  function goToStage2(){
+    stage1.style.display = "none";
+    stage2.style.display = "block";
+    audio.currentTime = 0;
+    audio.play().catch(err => console.log("Audio play blocked:", err));
   }
 
-  function swapButtons() {
-    yesBtn.classList.add('fade');
-    noBtn.classList.add('fade');
-    setTimeout(() => {
-      let t = yesBtn.textContent;
-      yesBtn.textContent = noBtn.textContent;
-      noBtn.textContent = t;
-      yesBtn.classList.remove('fade');
-      noBtn.classList.remove('fade');
-    }, 300);
+  function firstNoClick(){
+    noBtn.textContent = "YES";
+    yesBtn.textContent = "NO";
+    yesBtn.onclick = firstSequenceClick;
+    noBtn.onclick = goToStage3;
   }
 
-  function yesClick() {
-    if (yesBtn.textContent === 'YES') {
-      stage2.style.display = 'none';
-      stage3.style.display = 'block';
-    } else {
-      swapButtons();
+  function firstSequenceClick(){
+    yesBtn.remove(); // remove the YES/NO buttons
+    noBtn.remove();
+    spawnFunButton(funnyTexts[sequenceIndex]);
+  }
+
+  function spawnFunButton(text){
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    btn.className = "fun-btn pop";
+    btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    document.body.appendChild(btn);
+
+    btn.onclick = () => {
+      btn.remove();
+      sequenceIndex++;
+      if (sequenceIndex < funnyTexts.length) {
+        spawnFunButton(funnyTexts[sequenceIndex]);
+      } else {
+        spawnYesFlood();
+      }
+    };
+  }
+
+  function spawnYesFlood(){
+    for (let i = 0; i < 15; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = "YES";
+      btn.className = "yes-btn pop";
+      btn.style.position = "absolute";
+      btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+      btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+      btn.onclick = goToStage3;
+      document.body.appendChild(btn);
     }
   }
 
-  yesBtn.addEventListener('click', yesClick);
-  noBtn.addEventListener('click', swapButtons);
+  function goToStage3(){
+    document.body.querySelectorAll("button").forEach(b => b.remove());
+    stage2.style.display = "none";
+    stage3.style.display = "block";
+  }
 </script>
 
 </body>
