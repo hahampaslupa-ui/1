@@ -48,14 +48,16 @@
         cursor: pointer;
         font-family: monospace;
     }
-    #final-img {
+    #love-message {
         display: none;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        max-width: 80%;
-        max-height: 80%;
+        font-size: 28px;
+        text-align: center;
+        color: red;
+        animation: fadeIn 1s forwards;
     }
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -72,12 +74,12 @@
 
 <div id="text"></div>
 <button id="enter-btn">Enter</button>
-<img id="final-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQtpran2cZLakbrHw7Ht9d80TQVUgfyNv3vw&s">
+<div id="love-message">I love you so much bebe</div>
 
 <script>
     const audio = document.getElementById("matias-audio");
     const enterBtn = document.getElementById("enter-btn");
-    const finalImg = document.getElementById("final-img");
+    const loveMessage = document.getElementById("love-message");
     const textDiv = document.getElementById('text');
 
     const messages = [
@@ -113,8 +115,7 @@
         audio.play().catch(err => console.log("Audio play blocked:", err));
         textDiv.style.display = "none";
         enterBtn.style.display = "none";
-        finalImg.style.display = "block";
-        finalImg.style.animation = "fadeIn 1s forwards";
+        loveMessage.style.display = "block";
     });
 
     typeText();
