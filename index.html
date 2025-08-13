@@ -2,129 +2,188 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Romantic Invitation</title>
+<title>Romantic Invite</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  html, body {
-    margin:0; padding:0; height:100%;
-    background: url('https://i.ibb.co/0Yjkk5K/daisy-field.jpg') no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Georgia', serif;
-    color: white;
-    overflow: hidden;
-    position: relative;
-  }
-  #overlay {
-    background: rgba(0,0,0,0.5);
-    position:absolute; top:0; left:0;
-    width:100%; height:100%;
-    display:flex; justify-content:center; align-items:center;
-    flex-direction:column; text-align:center; padding:20px;
-  }
-  h1 { font-size:2em; margin-bottom:10px; color: #fff0f5; }
-  p { font-size:1.2em; max-width:600px; line-height:1.5; }
-  button {
-    margin:20px 10px;
-    padding:10px 20px;
-    font-size:18px;
-    background: #ffccda;
-    border:none;
-    border-radius:20px;
-    cursor:pointer;
-    font-weight:bold;
-    transition: background 0.3s, transform 0.3s;
-  }
-  button:hover {
-    background: #ff99bb;
-    transform: scale(1.05);
-  }
-  .hidden { display:none!important; }
-  .petal {
-    position:fixed; top:-10px;
-    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Daisy_%28flower%29.svg/120px-Daisy_%28flower%29.svg.png') no-repeat center center;
-    background-size: contain;
-    opacity:0.9;
-    pointer-events:none;
-    width:20px; height:20px;
-    animation: fall linear infinite;
-  }
-  @keyframes fall {
-    to {
-      transform: translateY(110vh) rotate(360deg);
-      opacity: 0;
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Georgia', serif;
+        overflow: hidden;
     }
-  }
+    /* Warning Screen */
+    #warning-screen {
+        background: black;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+    #warning-screen h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #ff4444;
+    }
+    #warning-screen p {
+        font-size: 18px;
+        margin-bottom: 40px;
+        color: #ddd;
+    }
+    .btn {
+        padding: 12px 24px;
+        background: white;
+        color: black;
+        font-size: 18px;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    /* Daisy Background */
+    #invite-screen {
+        display: none;
+        position: relative;
+        height: 100%;
+        width: 100%;
+        background: url('https://i.ibb.co/9tmvYLy/daisies.jpg') center/cover no-repeat;
+        animation: fadeIn 1.5s forwards;
+        padding: 30px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    /* Invitation Box */
+    .invite-box {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 600px;
+        margin: auto;
+        animation: fadeIn 2s ease-in-out forwards;
+    }
+    .invite-box p {
+        font-size: 18px;
+        color: #333;
+        white-space: pre-wrap;
+    }
+    .btn-yes, .btn-no {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        margin: 10px;
+        cursor: pointer;
+    }
+    .btn-yes {
+        background-color: #ff6fa5;
+        color: white;
+    }
+    .btn-no {
+        background-color: #ccc;
+        color: black;
+    }
+    /* Final Note */
+    #final-note {
+        display: none;
+        position: relative;
+        height: 100%;
+        width: 100%;
+        background: url('https://i.ibb.co/9tmvYLy/daisies.jpg') center/cover no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        animation: fadeIn 2s forwards;
+        padding: 30px;
+        box-sizing: border-box;
+    }
+    #final-note p {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 20px;
+        color: #444;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 </style>
 </head>
 <body>
 
-<div id="overlay">
-  <div id="step1">
+<!-- Warning Screen -->
+<div id="warning-screen">
     <h1>⚠️ WARNING: ENTRY</h1>
-    <p>By proceeding, you accept that there is no return.<br>If you understand, click enter.</p>
-    <button id="enter-btn">Enter</button>
-  </div>
-
-  <div id="step2" class="hidden">
-    <p>
-      Good day, Ms. Maine Peñuela,<br><br>
-      I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for).<br>
-      The date is still tentative, but I’ll share the details soon.<br><br>
-      Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
-      Looking forward to your response.
-    </p>
-    <button id="yes-btn">YES</button>
-    <button id="no-btn">NO</button>
-  </div>
-
-  <div id="step3" class="hidden">
-    <p>
-      Thank you so much for accepting my invitation!<br>
-      See you soonest. 💋 I love you so much Bebe! 🤍🤍🤍
-    </p>
-  </div>
+    <p>By proceeding, you accept that there is no return.<br><br>
+    If you understand, click enter.</p>
+    <button id="enter-btn" class="btn">Enter</button>
 </div>
 
-<iframe id="music-frame" width="0" height="0" src="" frameborder="0"
-  allow="autoplay; encrypted-media"></iframe>
+<!-- Invitation Screen -->
+<div id="invite-screen">
+    <div class="invite-box">
+        <p>
+Good day, Ms. Maine Peñuela,
+
+I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.
+
+Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.
+
+Looking forward to your response
+        </p>
+        <button id="yes-btn" class="btn-yes">YES</button>
+        <button id="no-btn" class="btn-no">NO</button>
+    </div>
+</div>
+
+<!-- Final Note -->
+<div id="final-note">
+    <p>Thank you so much for accepting my invitation! ❤️🤍🤍🤍  
+    See you soonest. I love you so much Bebe! Mwaaa 💋</p>
+</div>
+
+<!-- Music -->
+<audio id="bg-music" loop>
+    <source src="daisies.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-  const enterBtn = document.getElementById('enter-btn');
-  const yesBtn = document.getElementById('yes-btn');
-  const noBtn = document.getElementById('no-btn');
-  const step1 = document.getElementById('step1');
-  const step2 = document.getElementById('step2');
-  const step3 = document.getElementById('step3');
-  const musicFrame = document.getElementById('music-frame');
+    const enterBtn = document.getElementById('enter-btn');
+    const warningScreen = document.getElementById('warning-screen');
+    const inviteScreen = document.getElementById('invite-screen');
+    const finalNote = document.getElementById('final-note');
+    const yesBtn = document.getElementById('yes-btn');
+    const noBtn = document.getElementById('no-btn');
+    const music = document.getElementById('bg-music');
 
-  function createPetal() {
-    const petal = document.createElement('div');
-    petal.classList.add('petal');
-    petal.style.left = Math.random() * 100 + 'vw';
-    petal.style.animationDuration = (5 + Math.random() * 5) + 's';
-    document.body.appendChild(petal);
-    setTimeout(() => petal.remove(), 10000);
-  }
-  setInterval(createPetal, 300);
+    let yesLabel = "YES";
+    let noLabel = "NO";
 
-  enterBtn.addEventListener('click', () => {
-    step1.classList.add('hidden');
-    step2.classList.remove('hidden');
-    musicFrame.src = "https://www.youtube.com/embed/Ml0qpfS7Xqw?autoplay=1";
-  });
+    enterBtn.addEventListener('click', () => {
+        warningScreen.style.display = 'none';
+        inviteScreen.style.display = 'block';
+        music.play().catch(err => console.log("Autoplay blocked:", err));
+    });
 
-  noBtn.addEventListener('click', () => {
-    [yesBtn.textContent, noBtn.textContent] = [noBtn.textContent, yesBtn.textContent];
-  });
+    noBtn.addEventListener('click', () => {
+        // Swap labels
+        [yesLabel, noLabel] = [noLabel, yesLabel];
+        yesBtn.textContent = yesLabel;
+        noBtn.textContent = noLabel;
+    });
 
-  yesBtn.addEventListener('click', () => {
-    if (yesBtn.textContent === 'YES') {
-      step2.classList.add('hidden');
-      step3.classList.remove('hidden');
-    } else {
-      [yesBtn.textContent, noBtn.textContent] = [noBtn.textContent, yesBtn.textContent];
-    }
-  });
+    yesBtn.addEventListener('click', () => {
+        if (yesBtn.textContent === "YES") {
+            inviteScreen.style.display = 'none';
+            finalNote.style.display = 'flex';
+        } else {
+            // If "YES" is swapped, clicking it won't proceed
+        }
+    });
 </script>
 
 </body>
