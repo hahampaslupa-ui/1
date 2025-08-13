@@ -6,18 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   html, body {
-    margin:0; padding:0; height:100%; 
-    background: #ffe4ec; /* Soft pastel pink */
-    color:black; font-family:monospace; 
-    overflow:hidden;
-    display: flex; justify-content: center; align-items: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #ffe4ec; /* Pastel pink for cute, instant load */
+    color: #222;
+    font-family: monospace;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .center {
-    text-align:center;
+    text-align: center;
     max-width: 600px;
     padding: 20px;
   }
-  h1 { color: red; font-size: 26px; }
+  h1 { color: #d9534f; font-size: 26px; }
   p { font-size: 18px; }
   button {
     padding: 10px 20px;
@@ -26,41 +31,37 @@
     border: none;
     cursor: pointer;
     border-radius: 6px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s, opacity 0.3s;
   }
-  .enter-btn { background:white; color:black; }
-  .yes-btn { background:green; color:white; }
-  .no-btn { background:red; color:white; }
-  .fade {
-    opacity:0;
-    transition: opacity 0.4s ease;
-  }
+  .enter-btn { background: white; color: black; }
+  .yes-btn { background: #5cb85c; color: white; }
+  .no-btn { background: #d9534f; color: white; }
+  .fade { opacity: 0; }
 </style>
 </head>
 <body>
 
+<!-- Audio: Daisies by Justin Bieber -->
 <audio id="bg-music" preload="auto" loop>
-  <source src="https://files.catbox.moe/abcd123.mp3" type="audio/mpeg"> 
-  <!-- Replace with actual Daisies MP3 link -->
+  <source src="https://cdn3.mp3gaa.xyz/swahilisongs/wp-content/uploads/2025/07/Justin_Bieber_-_DAISIES.mp3" type="audio/mpeg">
+  <!-- Source found publicly online :contentReference[oaicite:0]{index=0} -->
 </audio>
 
 <div id="stage1" class="center">
   <h1>⚠️ WARNING: ENTRY</h1>
-  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click enter</p>
-  <button class="enter-btn" onclick="goToStage2()">Enter</button>
+  <p>By proceeding, you accept that there is no return.<br>If you understand, click Enter</p>
+  <button class="enter-btn" onclick="enterClicked()">Enter</button>
 </div>
 
 <div id="stage2" class="center" style="display:none;">
   <p>
     Good day, Ms. Maine Peñuela,<br><br>
-    I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
+    I’d like to formally invite you to a dinner date—location undisclosed (a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
     Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
     Looking forward to your response.
   </p>
-  <div>
-    <button id="yesBtn" class="yes-btn">YES</button>
-    <button id="noBtn" class="no-btn">NO</button>
-  </div>
+  <button id="yesBtn" class="yes-btn">YES</button>
+  <button id="noBtn" class="no-btn">NO</button>
 </div>
 
 <div id="stage3" class="center" style="display:none;">
@@ -71,47 +72,43 @@
 </div>
 
 <script>
-  const audio = document.getElementById("bg-music");
-  const stage1 = document.getElementById("stage1");
-  const stage2 = document.getElementById("stage2");
-  const stage3 = document.getElementById("stage3");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
+  const music = document.getElementById('bg-music');
+  const stage1 = document.getElementById('stage1');
+  const stage2 = document.getElementById('stage2');
+  const stage3 = document.getElementById('stage3');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
 
-  function goToStage2(){
-    stage1.style.display = "none";
-    stage2.style.display = "block";
-    audio.currentTime = 0;
-    audio.play().catch(err => console.log("Audio play blocked:", err));
+  function enterClicked() {
+    stage1.style.display = 'none';
+    stage2.style.display = 'block';
+    music.currentTime = 0;
+    music.play().catch(err => console.log('Audio play blocked:', err));
   }
 
-  function swapButtons(){
-    yesBtn.classList.add("fade");
-    noBtn.classList.add("fade");
-    setTimeout(()=>{
-      let tempText = yesBtn.textContent;
+  function swapButtons() {
+    yesBtn.classList.add('fade');
+    noBtn.classList.add('fade');
+    setTimeout(() => {
+      let t = yesBtn.textContent;
       yesBtn.textContent = noBtn.textContent;
-      noBtn.textContent = tempText;
-
-      let tempClass = yesBtn.className;
-      yesBtn.className = noBtn.className;
-      noBtn.className = tempClass;
-
-      yesBtn.onclick = yesBtn.textContent === "YES" ? goToStage3 : swapButtons;
-      noBtn.onclick = noBtn.textContent === "NO" ? swapButtons : goToStage3;
-
-      yesBtn.classList.remove("fade");
-      noBtn.classList.remove("fade");
-    }, 400);
+      noBtn.textContent = t;
+      yesBtn.classList.remove('fade');
+      noBtn.classList.remove('fade');
+    }, 300);
   }
 
-  function goToStage3(){
-    stage2.style.display = "none";
-    stage3.style.display = "block";
+  function yesClick() {
+    if (yesBtn.textContent === 'YES') {
+      stage2.style.display = 'none';
+      stage3.style.display = 'block';
+    } else {
+      swapButtons();
+    }
   }
 
-  yesBtn.onclick = goToStage3;
-  noBtn.onclick = swapButtons;
+  yesBtn.addEventListener('click', yesClick);
+  noBtn.addEventListener('click', swapButtons);
 </script>
 
 </body>
