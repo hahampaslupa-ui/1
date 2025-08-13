@@ -9,15 +9,15 @@
     margin:0; padding:0; height:100%;
     background:#ffe6f0; /* soft pastel pink */
     color:#333; font-family:monospace;
-    overflow:hidden;
-    display: flex; justify-content: center; align-items: center;
+    overflow:hidden; display:flex;
+    justify-content:center; align-items:center;
   }
   .center {
     text-align:center;
     max-width: 600px;
     padding: 20px;
   }
-  h1 { color: #ff4d88; font-size: 24px; }
+  h1 { color: red; font-size: 24px; }
   p { font-size: 18px; }
   button {
     padding: 10px 20px;
@@ -27,19 +27,13 @@
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.3s ease;
-    position: relative;
   }
   .enter-btn { background:white; color:black; }
-  .yes-btn { background:#4CAF50; color:white; }
-  .no-btn { background:#f44336; color:white; }
-  .fun-btn { background:#ff80aa; color:white; position:absolute; }
-  .fade { opacity:0; transition: opacity 0.4s ease; }
-  @keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .pop {
-    animation: popIn 0.3s ease forwards;
+  .yes-btn { background:green; color:white; }
+  .no-btn { background:red; color:white; }
+  .funny-btn {
+    background:orange; color:white;
+    position: absolute;
   }
 </style>
 </head>
@@ -49,25 +43,28 @@
   <source src="https://archive.org/download/until-i-found-you/Until%20I%20found%20You.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Stage 1: Warning -->
 <div id="stage1" class="center">
   <h1>⚠️ WARNING: ENTRY</h1>
-  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click enter</p>
+  <p>By proceeding, you accept that there is no return.<br><br>If you understand, click Enter</p>
   <button class="enter-btn" onclick="goToStage2()">Enter</button>
 </div>
 
+<!-- Stage 2: Invitation -->
 <div id="stage2" class="center" style="display:none;">
   <p>
     Good day, Ms. Maine Penuela,<br><br>
-    I’d like to formally invite you to a dinner date—location undisclosed (let’s call it a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
+    I’d like to formally invite you to a dinner date—location undisclosed (a surprise worth waiting for). The date is still tentative, but I’ll share the details soon.<br><br>
     Consider this your official notice: Your presence is requested. Hoping you’ll accept the invitation.<br><br>
     Looking forward to your response.
   </p>
   <div>
-    <button id="yesBtn" class="yes-btn" onclick="goToStage3()">YES</button>
-    <button id="noBtn" class="no-btn" onclick="firstNoClick()">NO</button>
+    <button id="yesBtn" class="yes-btn" onclick="fakeYes()">YES</button>
+    <button id="noBtn" class="no-btn" onclick="startFunnySequence()">NO</button>
   </div>
 </div>
 
+<!-- Stage 3: Final Note -->
 <div id="stage3" class="center" style="display:none;">
   <p>
     Thank you so much for accepting my invitation! ❤️<br>
@@ -80,14 +77,8 @@
   const stage1 = document.getElementById("stage1");
   const stage2 = document.getElementById("stage2");
   const stage3 = document.getElementById("stage3");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
-
-  let sequenceIndex = 0;
-  const funnyTexts = [
-    "Ayaw mo?", "Sure kana ba?", "Ano ba yan?", "Balakajan",
-    "Di kita bati", "Sige na kase!"
-  ];
+  let funnyIndex = 0;
+  const funnyTexts = ["Ayaw mo?", "Sure kana ba?", "Ano ba yan?", "Balakajan", "Di kita bati", "Sige na kase!"];
 
   function goToStage2(){
     stage1.style.display = "none";
@@ -96,60 +87,48 @@
     audio.play().catch(err => console.log("Audio play blocked:", err));
   }
 
-  function firstNoClick(){
-    noBtn.textContent = "YES";
-    yesBtn.textContent = "NO";
-    yesBtn.onclick = firstSequenceClick;
-    noBtn.onclick = goToStage3;
+  function fakeYes(){
+    // Looks clickable, but doesn't proceed
+    alert("Oops—try again later!");
   }
 
-  function firstSequenceClick(){
-    yesBtn.remove();
-    noBtn.remove();
-    spawnFunButton(funnyTexts[sequenceIndex]);
+  function startFunnySequence(){
+    stage2.innerHTML = ''; // clear invitation
+    spawnFunnyButton(funnyTexts[funnyIndex]);
   }
 
-  function spawnFunButton(text){
+  function spawnFunnyButton(text){
     const btn = document.createElement("button");
+    btn.className = "funny-btn";
     btn.textContent = text;
-    btn.className = "fun-btn pop";
     btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
     btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
-    document.body.appendChild(btn);
-
     btn.onclick = () => {
       btn.remove();
-      sequenceIndex++;
-      if (sequenceIndex < funnyTexts.length) {
-        spawnFunButton(funnyTexts[sequenceIndex]);
-      } else {
-        spawnYesFlood();
-      }
+      funnyIndex++;
+      if (funnyIndex < funnyTexts.length) spawnFunnyButton(funnyTexts[funnyIndex]);
+      else spawnYesFlood();
     };
+    document.body.appendChild(btn);
   }
 
   function spawnYesFlood(){
-    let count = 0;
-    const interval = setInterval(() => {
-      if (count >= 15) {
-        clearInterval(interval);
-        return;
-      }
+    for (let i = 0; i < 20; i++) {
       const btn = document.createElement("button");
+      btn.className = "yes-btn";
       btn.textContent = "YES";
-      btn.className = "yes-btn pop";
       btn.style.position = "absolute";
       btn.style.top = Math.random() * (window.innerHeight - 50) + "px";
       btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
       btn.onclick = goToStage3;
       document.body.appendChild(btn);
-      count++;
-    }, 200); // new YES every 0.2s
+    }
   }
 
   function goToStage3(){
-    document.body.querySelectorAll("button").forEach(b => b.remove());
-    stage2.style.display = "none";
+    document.body.innerHTML = ''; // clear everything
+    document.body.appendChild(stage3);
+    document.body.appendChild(audio);
     stage3.style.display = "block";
   }
 </script>
